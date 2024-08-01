@@ -8,10 +8,11 @@ RUN pip3 install --upgrade pip
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install -r requirements.txt
 
-COPY . /
+COPY . /app
 
 RUN mkdir /.cache && chmod -R 777 /.cache
 
-CMD ['python',"tcmb.py"]
+
+CMD ["python","tcmb.py"]
 
 
