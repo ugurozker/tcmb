@@ -42,7 +42,7 @@ class EVDS:
         self.series_response=""
         self.sub_category_response=""
         self.function_params_response=""
-        self.model=ChatOpenAI(model="gpt-4o-mini", openai_api_key = "sk-None-dul7zuECMhCUTYlnR0o2T3BlbkFJJjDGzaaxUkzGy0CnOBsQ", max_tokens=200)
+        self.model=ChatOpenAI(model="gpt-4o-mini", openai_api_key = openai_api_key, max_tokens=200)
 
     def get_evds(self, startdate, enddate, aggregationtypes="", frequency="", formulas="") -> Dict:
         full_series = ""
@@ -262,14 +262,16 @@ tcmb_tag = Tag(name="llm", description="LLM Api for Ziraat Teknoloji")
 
 class ModelQuery(BaseModel):
     text: str
+    key: str
 
 @app.post("/", summary="get tcmb recommendation with llm", tags=[tcmb_tag])
 def index(body: ModelQuery):
     try:
         print('web servis başlatıldı')
         data = body.text
+        key = body.key
         query = data
-        evds_generator = EVDS("sk-None-dul7zuECMhCUTYlnR0o2T3BlbkFJJjDGzaaxUkzGy0CnOBsQ", "dKkDaKKiXg", "0tTRw7npPNMkCH5LGw1pWcTdFd9bw2z5")
+        evds_generator = EVDS(key, "dKkDaKKiXg", "0tTRw7npPNMkCH5LGw1pWcTdFd9bw2z5")
         parsed_query = evds_generator._parse_user_query(user_query=query)
         series_list_json = json.loads(parsed_query)
         result = evds_generator.tool_calling(series_list_json, query)
